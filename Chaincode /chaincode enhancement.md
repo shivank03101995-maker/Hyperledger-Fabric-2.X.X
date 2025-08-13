@@ -95,7 +95,7 @@ Useful for CI/CD integration.
 **3. Example: Automated Deployment Script**
 Here’s a small automation for approval + commit:
 
-
+##
 #!/bin/bash
 CC_NAME="studentcc"
 CC_PATH="./chaincode/student"
@@ -122,6 +122,9 @@ peer lifecycle chaincode commit \
     --version ${CC_VERSION} --sequence ${CC_SEQ} \
     --orderer localhost:7050 --tls --cafile $ORDERER_CA \
     --peerAddresses localhost:7051 --tlsRootCertFiles $PEER0_ORG1_CA
+
+##
+
 If you want, I can prepare a Hyperledger Fabric 2.5 “Enhanced Chaincode Lifecycle” setup for your university channel,
 with:
 
