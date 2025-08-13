@@ -107,9 +107,9 @@ CHANNEL_NAME="university"
 peer lifecycle chaincode package ${CC_NAME}.tar.gz \
     --path ${CC_PATH} --lang ${CC_LANG} --label ${CC_NAME}_${CC_VERSION}
 
-peer lifecycle chaincode install ${CC_NAME}.tar.gz
+**peer lifecycle chaincode install ${CC_NAME}.tar.gz**
 
-PKG_ID=$(peer lifecycle chaincode queryinstalled | grep ${CC_NAME}_${CC_VERSION} | awk '{print $3}' | sed 's/,$//')
+**PKG_ID=$(peer lifecycle chaincode queryinstalled | grep ${CC_NAME}_${CC_VERSION} | awk '{print $3}' | sed 's/,$//')**
 
 peer lifecycle chaincode approveformyorg \
     --channelID ${CHANNEL_NAME} --name ${CC_NAME} \
