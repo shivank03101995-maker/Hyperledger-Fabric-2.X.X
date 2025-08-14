@@ -49,7 +49,9 @@ peer lifecycle chaincode commit \
     --orderer localhost:7050 \
     --tls --cafile $ORDERER_CA \
     --peerAddresses localhost:7051 --tlsRootCertFiles $PEER0_ORG1_CA
+
 **2. Enhancements You Can Make to the Lifecycle**
+
 **a) Automation**
 Shell scripts or Ansible playbooks to run all lifecycle commands in one go.
 
@@ -94,6 +96,8 @@ Useful for CI/CD integration.
 
 **3. Example: Automated Deployment Script**
 Here’s a small automation for approval + commit:
+
+**Command to deploy chaincode**
 
 ##
 #!/bin/bash
