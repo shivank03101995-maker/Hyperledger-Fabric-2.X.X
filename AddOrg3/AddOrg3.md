@@ -1,6 +1,6 @@
 📘 **Documentation: Adding Org3 to an Existing Hyperledger Fabric Network**
    
-   This guide explains step-by-step how to add Org3 into an already running Fabric network (with Org1, Org2, and Orderer).
+    This guide explains step-by-step how to add Org3 into an already running Fabric network (with Org1, Org2, and Orderer).
 
 ✅ **Prerequisites**
 
@@ -22,48 +22,48 @@
 
 **📂 Output:**
 
-organizations/peerOrganizations/org3.example.com/
+    organizations/peerOrganizations/org3.example.com/
 
 **2️⃣ Fetch Current Channel Config**
 
 **📦 Command:**
 
-export CHANNEL_NAME=mychannel
-export ORDERER_CA=${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
+    export CHANNEL_NAME=mychannel
+    export ORDERER_CA=${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
 
-peer channel fetch config config_block.pb -o localhost:7050 \
-  --ordererTLSHostnameOverride orderer.example.com \
-  -c $CHANNEL_NAME --tls --cafile $ORDERER_CA
+    peer channel fetch config config_block.pb -o localhost:7050 \
+    --ordererTLSHostnameOverride orderer.example.com \
+    -c $CHANNEL_NAME --tls --cafile $ORDERER_CA
 
 
 Convert block to JSON:
 
-configtxlator proto_decode --input config_block.pb --type common.Block \
-  | jq .data.data[0].payload.data.config > config.json
+    configtxlator proto_decode --input config_block.pb --type common.Block \
+    | jq .data.data[0].payload.data.config > config.json
 
 **3️⃣ Create Org3 Definition**
 
 **📦 Command:**
 
-configtxgen -printOrg Org3MSP > org3.json
+    configtxgen -printOrg Org3MSP > org3.json
 
 
 Merge with existing config:
 
-jq -s '.[0] * {"channel_group":{"groups":{"Application":{"groups":{"Org3MSP":.[1]}}}}}' \
-  config.json org3.json > modified_config.json
+    jq -s '.[0] * {"channel_group":{"groups":{"Application":{"groups":{"Org3MSP":.[1]}}}}}' \
+    config.json org3.json > modified_config.json
 
 **4️⃣ Create Config Update Transaction**
 
 **📦 Command:**
 
 # Encode configs
-configtxlator proto_encode --input config.json --type common.Config --output config.pb
-configtxlator proto_encode --input modified_config.json --type common.Config --output modified_config.pb
+    configtxlator proto_encode --input config.json --type common.Config --output config.pb
+    configtxlator proto_encode --input modified_config.json --type common.Config --output modified_config.pb
 
 # Compute delta
-configtxlator compute_update --channel_id $CHANNEL_NAME \
-  --original config.pb --updated modified_config.pb --output org3_update.pb
+    configtxlator compute_update --channel_id $CHANNEL_NAME \
+    --original config.pb --updated modified_config.pb --output org3_update.pb
 
 # Decode update
 configtxlator proto_decode --input org3_update.pb --type common.ConfigUpdate \
