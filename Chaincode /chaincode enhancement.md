@@ -16,13 +16,13 @@
         --lang node \
         --label student_1
 
-Install chaincode on each peer:
-
+**Install chaincode on each peer:
+**
     peer lifecycle chaincode install mycc.tar.gz
 
-Get package ID:
-peer lifecycle chaincode queryinstalled
-Approve chaincode for your org:
+**Get package ID:**
+    peer lifecycle chaincode queryinstalled
+    Approve chaincode for your org:
 
 bash
 
