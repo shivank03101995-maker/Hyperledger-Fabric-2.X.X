@@ -4,22 +4,20 @@
 
 ✅ **Prerequisites**
 
-Hyperledger Fabric binaries and Docker images installed
+    Hyperledger Fabric binaries and Docker images installed
+    Running Fabric test network with Org1, Org2
+    Channel already created (e.g., mychannel)
 
-Running Fabric test network with Org1, Org2
-
-Channel already created (e.g., mychannel)
-
-Tools: cryptogen, configtxgen, configtxlator, jq
+    Tools: cryptogen, configtxgen, configtxlator, jq
 
 **1️⃣ Generate Crypto Material for Org3**
-Use cryptogen to generate Org3 certificates.
+    Use cryptogen to generate Org3 certificates.
 
 **📦 Command:**
-cd fabric-samples/test-network
+    cd fabric-samples/test-network
 
-cryptogen generate --config=./organizations/cryptogen/crypto-config-org3.yaml \
-  --output="organizations"
+    cryptogen generate --config=./organizations/cryptogen/crypto-config-org3.yaml \
+    --output="organizations"
 
 
 **📂 Output:**
@@ -79,9 +77,9 @@ echo '{"payload":{"header":{"channel_header":{"channel_id":"'$CHANNEL_NAME'", "t
 configtxlator proto_encode --input org3_update_in_envelope.json \
   --type common.Envelope --output org3_update_in_envelope.pb
 
-5️⃣ Sign and Submit the Update
+**5️⃣ Sign and Submit the Update**
 
-🔑 Org1 signs
+**🔑 Org1 signs**
 
 export CORE_PEER_LOCALMSPID=Org1MSP
 export CORE_PEER_MSPCONFIGPATH=${PWD}/organizations/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
@@ -89,7 +87,7 @@ export CORE_PEER_MSPCONFIGPATH=${PWD}/organizations/peerOrganizations/org1.examp
 peer channel signconfigtx -f org3_update_in_envelope.pb
 
 
-🔑 Org2 signs
+**🔑 Org2 signs**
 
 export CORE_PEER_LOCALMSPID=Org2MSP
 export CORE_PEER_MSPCONFIGPATH=${PWD}/organizations/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp
@@ -97,22 +95,22 @@ export CORE_PEER_MSPCONFIGPATH=${PWD}/organizations/peerOrganizations/org2.examp
 peer channel signconfigtx -f org3_update_in_envelope.pb
 
 
-📤 Submit update
+**📤 Submit update**
 
 peer channel update -f org3_update_in_envelope.pb \
   -c $CHANNEL_NAME -o localhost:7050 \
   --ordererTLSHostnameOverride orderer.example.com \
   --tls --cafile $ORDERER_CA
 
-6️⃣ Start Org3 Peer Node
+**6️⃣ Start Org3 Peer Node**
 
 Define docker-compose-org3.yaml (peer + optional CouchDB).
 
-📦 Command:
+**📦 Command:**
 
 docker-compose -f compose/docker/docker-compose-org3.yaml up -d
 
-7️⃣ Join Org3 to the Channel
+**7️⃣ Join Org3 to the Channel**
 
 Set Org3 environment variables:
 
@@ -130,22 +128,22 @@ peer channel fetch 0 mychannel.block \
 
 peer channel join -b mychannel.block
 
-8️⃣ Update Anchor Peer for Org3
+**8️⃣ Update Anchor Peer for Org3**
 
-📦 Command:
+**📦 Command:**
 
 configtxgen -outputAnchorPeersUpdate Org3MSPanchors.tx \
   -profile TwoOrgsChannel -asOrg Org3MSP -channelID $CHANNEL_NAME
 
 
-Submit update:
+**Submit update:**
 
 peer channel update -o localhost:7050 \
   --ordererTLSHostnameOverride orderer.example.com \
   -c $CHANNEL_NAME -f Org3MSPanchors.tx \
   --tls --cafile $ORDERER_CA
 
-🎉 Org3 Successfully Added!
+**🎉 Org3 Successfully Added!**
 
 Now Org3 can:
 
