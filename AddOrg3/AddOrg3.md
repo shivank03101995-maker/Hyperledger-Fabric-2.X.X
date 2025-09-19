@@ -1,4 +1,4 @@
-📘 **Documentation: Adding Org3 to an Existing Hyperledger Fabric Network**
+# 📘 **Documentation: Adding Org3 to an Existing Hyperledger Fabric Network**
    
     This guide explains step-by-step how to add Org3 into an already running Fabric network (with Org1, Org2, and Orderer).
 
