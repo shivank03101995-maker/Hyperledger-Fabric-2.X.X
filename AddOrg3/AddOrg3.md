@@ -66,65 +66,65 @@ Merge with existing config:
     --original config.pb --updated modified_config.pb --output org3_update.pb
 
 # Decode update
-configtxlator proto_decode --input org3_update.pb --type common.ConfigUpdate \
-  | jq . > org3_update.json
+    configtxlator proto_decode --input org3_update.pb --type common.ConfigUpdate \
+    | jq . > org3_update.json
 
 # Wrap in envelope
-echo '{"payload":{"header":{"channel_header":{"channel_id":"'$CHANNEL_NAME'", "type":2}}, "data":{"config_update":'$(cat org3_update.json)'}}}' \
-  | jq . > org3_update_in_envelope.json
+    echo '{"payload":{"header":{"channel_header":{"channel_id":"'$CHANNEL_NAME'", "type":2}}, "data":{"config_update":'$(cat org3_update.json)'}}}' \
+    | jq . > org3_update_in_envelope.json
 
 # Encode final tx
-configtxlator proto_encode --input org3_update_in_envelope.json \
-  --type common.Envelope --output org3_update_in_envelope.pb
+    configtxlator proto_encode --input org3_update_in_envelope.json \
+    --type common.Envelope --output org3_update_in_envelope.pb
 
 **5️⃣ Sign and Submit the Update**
 
 **🔑 Org1 signs**
 
-export CORE_PEER_LOCALMSPID=Org1MSP
-export CORE_PEER_MSPCONFIGPATH=${PWD}/organizations/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
+    export CORE_PEER_LOCALMSPID=Org1MSP
+    export CORE_PEER_MSPCONFIGPATH=${PWD}/organizations/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
 
-peer channel signconfigtx -f org3_update_in_envelope.pb
+    peer channel signconfigtx -f org3_update_in_envelope.pb
 
 
 **🔑 Org2 signs**
 
-export CORE_PEER_LOCALMSPID=Org2MSP
-export CORE_PEER_MSPCONFIGPATH=${PWD}/organizations/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp
+    export CORE_PEER_LOCALMSPID=Org2MSP
+    export CORE_PEER_MSPCONFIGPATH=${PWD}/organizations/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp
 
-peer channel signconfigtx -f org3_update_in_envelope.pb
+    peer channel signconfigtx -f org3_update_in_envelope.pb
 
 
 **📤 Submit update**
 
-peer channel update -f org3_update_in_envelope.pb \
-  -c $CHANNEL_NAME -o localhost:7050 \
-  --ordererTLSHostnameOverride orderer.example.com \
-  --tls --cafile $ORDERER_CA
+    peer channel update -f org3_update_in_envelope.pb \
+    -c $CHANNEL_NAME -o localhost:7050 \
+    --ordererTLSHostnameOverride orderer.example.com \
+    --tls --cafile $ORDERER_CA
 
 **6️⃣ Start Org3 Peer Node**
 
-Define docker-compose-org3.yaml (peer + optional CouchDB).
+    Define docker-compose-org3.yaml (peer + optional CouchDB).
 
 **📦 Command:**
 
-docker-compose -f compose/docker/docker-compose-org3.yaml up -d
+    docker-compose -f compose/docker/docker-compose-org3.yaml up -d
 
 **7️⃣ Join Org3 to the Channel**
 
-Set Org3 environment variables:
+    Set Org3 environment variables:
 
-export CORE_PEER_LOCALMSPID=Org3MSP
-export CORE_PEER_MSPCONFIGPATH=${PWD}/organizations/peerOrganizations/org3.example.com/users/Admin@org3.example.com/msp
-export CORE_PEER_ADDRESS=localhost:11051
-export CORE_PEER_TLS_ROOTCERT_FILE=${PWD}/organizations/peerOrganizations/org3.example.com/peers/peer0.org3.example.com/tls/ca.crt
+        export CORE_PEER_LOCALMSPID=Org3MSP
+        export CORE_PEER_MSPCONFIGPATH=${PWD}/organizations/peerOrganizations/org3.example.com/users/Admin@org3.example.com/msp
+        export CORE_PEER_ADDRESS=localhost:11051
+        export CORE_PEER_TLS_ROOTCERT_FILE=${PWD}/organizations/peerOrganizations/org3.example.com/peers/peer0.org3.example.com/tls/ca.crt
 
 
 Fetch block and join:
 
-peer channel fetch 0 mychannel.block \
-  -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com \
-  -c $CHANNEL_NAME --tls --cafile $ORDERER_CA
+    peer channel fetch 0 mychannel.block \
+    -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com \
+    -c $CHANNEL_NAME --tls --cafile $ORDERER_CA
 
 peer channel join -b mychannel.block
 
@@ -132,23 +132,20 @@ peer channel join -b mychannel.block
 
 **📦 Command:**
 
-configtxgen -outputAnchorPeersUpdate Org3MSPanchors.tx \
-  -profile TwoOrgsChannel -asOrg Org3MSP -channelID $CHANNEL_NAME
+    configtxgen -outputAnchorPeersUpdate Org3MSPanchors.tx \
+    -profile TwoOrgsChannel -asOrg Org3MSP -channelID $CHANNEL_NAME
 
 
 **Submit update:**
 
-peer channel update -o localhost:7050 \
-  --ordererTLSHostnameOverride orderer.example.com \
-  -c $CHANNEL_NAME -f Org3MSPanchors.tx \
-  --tls --cafile $ORDERER_CA
+    peer channel update -o localhost:7050 \
+    --ordererTLSHostnameOverride orderer.example.com \
+    -c $CHANNEL_NAME -f Org3MSPanchors.tx \
+    --tls --cafile $ORDERER_CA
 
 **🎉 Org3 Successfully Added!**
 
-Now Org3 can:
-
-Install, approve, and commit chaincode
-
-Query and submit transactions
-
-Participate as a full member of the channel
+    Now Org3 can:
+    Install, approve, and commit chaincode
+    Query and submit transactions
+    Participate as a full member of the channel
