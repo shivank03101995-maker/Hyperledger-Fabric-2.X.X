@@ -8,28 +8,27 @@ Improving the process so it’s more automated, secure, and scalable
 I’ll explain both.
 
 **1. The Fabric 2.x Chaincode Lifecycle**
-Instead of the old single instantiate command, the process is now package → install → approve → commit.
+    Instead of the old single instantiate command, the process is now package → install → approve → commit.
 
 **Steps:**
-Package chaincode (with a label and version)
+    Package chaincode (with a label and version)
 
-peer lifecycle chaincode package mycc.tar.gz \
-    --path ./chaincode/student \
-    --lang node \
-    --label student_1
+        peer lifecycle chaincode package mycc.tar.gz \
+        --path ./chaincode/student \
+        --lang node \
+        --label student_1
+
 Install chaincode on each peer:
 
+    peer lifecycle chaincode install mycc.tar.gz
 
-peer lifecycle chaincode install mycc.tar.gz
 Get package ID:
-
-
 peer lifecycle chaincode queryinstalled
 Approve chaincode for your org:
 
 bash
 
-peer lifecycle chaincode approveformyorg \
+    peer lifecycle chaincode approveformyorg \
     --channelID university \
     --name studentcc \
     --version 1.0 \
@@ -38,9 +37,10 @@ peer lifecycle chaincode approveformyorg \
     --init-required \
     --orderer localhost:7050 \
     --tls --cafile $ORDERER_CA
+
 Commit chaincode to the channel:
 
-peer lifecycle chaincode commit \
+    peer lifecycle chaincode commit \
     --channelID university \
     --name studentcc \
     --version 1.0 \
