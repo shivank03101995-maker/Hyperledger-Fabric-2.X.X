@@ -1,11 +1,9 @@
-In Hyperledger Fabric 2.x, the chaincode lifecycle was completely redesigned compared to Fabric 1.x,
-and enhancement in this context usually means either:
-
-Using new Fabric 2.x lifecycle features that weren’t in the old model
-
-Improving the process so it’s more automated, secure, and scalable
-
-I’ll explain both.
+# 📘 **Documentation: ChainCode Enhancement Hyperledger Fabric Network**
+    In Hyperledger Fabric 2.x, the chaincode lifecycle was completely redesigned compared to Fabric 1.x,
+    and enhancement in this context usually means either:
+    Using new Fabric 2.x lifecycle features that weren’t in the old model
+    Improving the process so it’s more automated, secure, and scalable
+    I’ll explain both.
 
 **1. The Fabric 2.x Chaincode Lifecycle**
     Instead of the old single instantiate command, the process is now package → install → approve → commit.
@@ -99,10 +97,10 @@ Commit chaincode to the channel:
 
     peer lifecycle chaincode package ${CC_NAME}.tar.gz \
         --path ${CC_PATH} --lang ${CC_LANG} --label ${CC_NAME}_${CC_VERSION}
+    
+    peer lifecycle chaincode install ${CC_NAME}.tar.gz
 
-**peer lifecycle chaincode install ${CC_NAME}.tar.gz**
-
-**PKG_ID=$(peer lifecycle chaincode queryinstalled | grep ${CC_NAME}_${CC_VERSION} | awk '{print$3}'| sed 's/,$//')**
+    PKG_ID=$(peer lifecycle chaincode queryinstalled | grep ${CC_NAME}_${CC_VERSION} | awk '{print$3}'| sed 's/,$//')
 
     peer lifecycle chaincode approveformyorg \
         --channelID ${CHANNEL_NAME} --name ${CC_NAME} \
