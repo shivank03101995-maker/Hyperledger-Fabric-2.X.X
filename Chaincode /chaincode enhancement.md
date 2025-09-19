@@ -50,37 +50,45 @@ Commit chaincode to the channel:
 **2. Enhancements You Can Make to the Lifecycle**
 
 **a) Automation :**
+
     Shell scripts or Ansible playbooks to run all lifecycle commands in one go.
     Use Fabric test-network style scripts as templates.
     Example: a deployChaincode.sh that handles all org approvals and commits.
 
 **b) Chaincode-as-a-Service (CCaaS) :**
+
     In Fabric 2.4+, you can run chaincode outside peer container.
 
 **Benefits:**
+
     Any language (Python, Rust, etc.).
     Easier debugging.
     Faster updates without rebuilding peer image.
 
 **c) Endorsement Policy Enhancements :**
+
     In Fabric 2.x, endorsement policy is defined during approve/commit, not in chaincode.
     Example:
     --signature-policy "OR('Org1MSP.peer','Org2MSP.peer')"
     Or use collections-config.json for private data.
 
 **d) Sequence Upgrade :**
+
     To upgrade in Fabric 2.x, you increase the sequence number.
     This allows for incremental updates without forcing a new init.
 
 **e) Multiple Chaincode Packages / Versions :**
+
     You can install multiple versions on peers.
     Each channel can commit a different version depending on org approvals.
 
 **f) External Builders :**
+
     With build control, you can customize how chaincode is built (compile Go, bundle Node.js, etc.).
     Useful for CI/CD integration.
 
 **3. Example: Automated Deployment Script :**
+
     Here’s a small automation for approval + commit:
 
 **Command to deploy chaincode :**
